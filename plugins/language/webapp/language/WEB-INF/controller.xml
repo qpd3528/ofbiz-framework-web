@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://common/webcommon/WEB-INF/portal-controller.xml"/>
+    <include location="component://language/widget/language/LanguageCompoundWidgets.xml"/>
+
+    <description>Language Component Site Configuration File</description>
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+        <event name="test" type="java" path="org.apache.ofbiz.webapp.event.TestEvent" invoke="test"/>
+    </postprocessor>
+    -->
+
+    <!-- Request Mappings -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
+
+    <!-- Language Requests -->
+    <request-map uri="FindLanguage"><security https="true" auth="true"/><response name="success" type="view" value="FindLanguage"/></request-map>
+    <request-map uri="FindSystemLanguage"><security https="true" auth="true"/><response name="success" type="view" value="FindSystemLanguage"/></request-map>
+    <request-map uri="EditLanguage"><security https="true" auth="true"/><response name="success" type="view" value="EditLanguage"/></request-map>
+    <request-map uri="EditSystemLanguage"><security https="true" auth="true"/><response name="success" type="view" value="EditSystemLanguage"/></request-map>
+    <request-map uri="EditLanguageLayer"><security https="true" auth="true"/><response name="success" type="view" value="EditLanguageLayer"/></request-map>
+    <request-map uri="EditSystemLanguageLayer"><security https="true" auth="true"/><response name="success" type="view" value="EditSystemLanguageLayer"/></request-map>
+    <request-map uri="LanguageReportHtml"><security https="true" auth="true"/><response name="success" type="view" value="LanguageReportHtml"/></request-map>
+    <request-map uri="LanguageReportXls"><security https="true" auth="true"/><response name="success" type="view" value="LanguageReportXls"/></request-map>
+    <request-map uri="LanguageReportPdf"><security https="true" auth="true"/><response name="success" type="view" value="LanguageReportPdf"/></request-map>
+    <request-map uri="ListLanguageExport"><security https="true" auth="true"/><response name="success" type="view" value="ListLanguageExport"/></request-map>
+    <request-map uri="createLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createLanguage"/>
+        <response name="success" type="request-redirect" value="EditLanguage">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="FindLanguage"/>
+    </request-map>
+    <request-map uri="updateLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLanguage"/>
+        <response name="success" type="request-redirect" value="EditLanguage">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguage"/>
+    </request-map>
+    <request-map uri="deleteLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteLanguage"/>
+        <response name="success" type="request-redirect" value="FindLanguage"/>
+        <response name="error" type="view" value="EditLanguage"/>
+    </request-map>
+    <request-map uri="createSystemLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createSystemLanguage"/>
+        <response name="success" type="request-redirect" value="EditSystemLanguage">
+            <redirect-parameter name="SystemLanguageId"/>
+        </response>
+        <response name="error" type="view" value="FindSystemLanguage"/>
+    </request-map>
+    <request-map uri="updateSystemLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateSystemLanguage"/>
+        <response name="success" type="request-redirect" value="EditSystemLanguage">
+            <redirect-parameter name="SystemLanguageId"/>
+        </response>
+        <response name="error" type="view" value="EditSystemLanguage"/>
+    </request-map>
+    <request-map uri="deleteSystemLanguage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteSystemLanguage"/>
+        <response name="success" type="request-redirect" value="FindSystemLanguage"/>
+        <response name="error" type="view" value="EditSystemLanguage"/>
+    </request-map>
+    <request-map uri="createLanguageAjax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createLanguage"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="updateLanguageAjax">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLanguage"/>
+        <response name="success" type="view" value="findLanguageAjax"/>
+        <response name="error" type="view" value="findLanguageAjax"/>
+    </request-map>
+
+    <request-map uri="EditLanguageItems"><security https="true" auth="true"/><response name="success" type="view" value="EditLanguageItems"/></request-map>
+    <request-map uri="createLanguageItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createLanguageItem"/>
+        <response name="success" type="request-redirect" value="EditLanguageItems">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageItems"/>
+    </request-map>
+    <request-map uri="updateLanguageItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLanguageItem"/>
+        <response name="success" type="request-redirect" value="EditLanguageItems">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageItems"/>
+    </request-map>
+    <request-map uri="deleteLanguageItem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteLanguageItem"/>
+        <response name="success" type="request-redirect" value="EditLanguageItems">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageItems"/>
+    </request-map>
+
+    <request-map uri="EditLanguageFeatureAppls"><security https="true" auth="true"/><response name="success" type="view" value="EditLanguageFeatureAppls"/></request-map>
+    <request-map uri="language_createLanguageFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createLanguageFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeatureAppls">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeatureAppls"/>
+    </request-map>
+    <request-map uri="language_updateLanguageFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLanguageFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeatureAppls">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeatureAppls"/>
+    </request-map>
+    <request-map uri="language_deleteLanguageFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteLanguageFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeatureAppls">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeatureAppls"/>
+    </request-map>
+
+    <!-- LanguageFeature Requests -->
+    <request-map uri="FindLanguageFeature"><security https="true" auth="true"/><response name="success" type="view" value="FindLanguageFeature"/></request-map>
+    <request-map uri="EditLanguageFeature"><security https="true" auth="true"/><response name="success" type="view" value="EditLanguageFeature"/></request-map>
+    <request-map uri="createLanguageFeature">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createLanguageFeature"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeature">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeature"/>
+    </request-map>
+    <request-map uri="updateLanguageFeature">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLanguageFeature"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeature">
+            <redirect-parameter name="languageFeatureId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeature"/>
+    </request-map>
+
+    <request-map uri="EditLanguageFeatureLanguageAppls"><security https="true" auth="true"/><response name="success" type="view" value="EditLanguageFeatureLanguageAppls"/></request-map>
+    <request-map uri="feature_createLanguageFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createLanguageFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeatureLanguageAppls">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeatureLanguageAppls"/>
+    </request-map>
+    <request-map uri="feature_updateLanguageFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateLanguageFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeatureLanguageAppls">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeatureLanguageAppls"/>
+    </request-map>
+    <request-map uri="feature_deleteLanguageFeatureAppl">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteLanguageFeatureAppl"/>
+        <response name="success" type="request-redirect" value="EditLanguageFeatureLanguageAppls">
+            <redirect-parameter name="languageId"/>
+        </response>
+        <response name="error" type="view" value="EditLanguageFeatureLanguageAppls"/>
+    </request-map>
+    <request-map uri="findLanguageFeatures">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://language/groovyScripts/FindLanguageFeatures.groovy"/>
+        <response name="success" type="view" value="ajaxAutocompleteOptions"/>
+        <response name="error" type="view" value="ajaxAutocompleteOptions"/>
+    </request-map>
+
+    <request-map uri="FormWidgetLanguages"><security https="true" auth="true"/><response name="success" type="view" value="FormWidgetLanguages"/></request-map>
+
+    <request-map uri="LookupLanguageFeature"><security https="true" auth="true"/><response name="success" type="view" value="LookupLanguageFeature"/></request-map>
+    <request-map uri="LookupPartyGroupByName"><security https="true" auth="true"/><response name="success" type="view" value="LookupPartyGroupByName"/></request-map>
+
+    <request-map uri="ListLanguageFormOnly"><security https="true" auth="false"/><response name="success" type="view" value="ListLanguageFormOnly"/></request-map>
+    <request-map uri="CreateLanguageFormOnly"><security https="true" auth="false"/><response name="success" type="view" value="CreateLanguageFormOnly"/></request-map>
+
+    <request-map uri="printLanguageFOPFonts">
+      <security https="true" auth="true"/>
+      <response name="success" type="view" value="printLanguageFOPFonts"/>
+    </request-map>
+    
+    <request-map uri="fonts.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="fonts.fo"/>
+    </request-map>
+
+    <request-map uri="views">
+        <security https="true" auth="false"/>
+        <response name="success" type="request" value="main"/>
+    </request-map>
+
+    <request-map uri="LanguageGeoLocationPointSet1"><security https="true" auth="true"/><response name="success" type="view" value="LanguageGeoLocationPointSet1"/></request-map>
+    <request-map uri="LanguageGeoLocationPointSet2"><security https="true" auth="true"/><response name="success" type="view" value="LanguageGeoLocationPointSet2"/></request-map>
+    <request-map uri="LanguageGeoLocationPointSet3"><security https="true" auth="true"/><response name="success" type="view" value="LanguageGeoLocationPointSet3"/></request-map>
+    <request-map uri="LanguageGeoLocationPointSet4"><security https="true" auth="true"/><response name="success" type="view" value="LanguageGeoLocationPointSet4"/></request-map>
+    <request-map uri="LanguageGeoLocationAddress"><security https="true" auth="true"/><response name="success" type="view" value="LanguageGeoLocationAddress"/></request-map>
+    <request-map uri="LanguageOsmGeoLocationPointSet1"><security https="true" auth="true"/><response name="success" type="view" value="LanguageOsmGeoLocationPointSet1"/></request-map>
+    <request-map uri="LanguageOsmGeoLocationPointSet2"><security https="true" auth="true"/><response name="success" type="view" value="LanguageOsmGeoLocationPointSet2"/></request-map>
+    <request-map uri="LanguageOsmGeoLocationPointSet3"><security https="true" auth="true"/><response name="success" type="view" value="LanguageOsmGeoLocationPointSet3"/></request-map>
+    <request-map uri="LanguageOsmGeoLocationPointSet4"><security https="true" auth="true"/><response name="success" type="view" value="LanguageOsmGeoLocationPointSet4"/></request-map>
+    
+    <!--flot language requests-->
+    <request-map uri="LanguageBarChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LanguageBarChart"/>
+    </request-map>
+    <request-map uri="LanguagePieChart">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LanguagePieChart"/>
+    </request-map>
+    
+    <!-- Pdf Report Options -->
+    <request-map uri="LanguageReportPdfOptions">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LanguageReportPdfOptions"/>
+    </request-map>
+    
+    <!-- Barcode/QRCode language requests -->
+    <request-map uri="LanguageReportPdfBarcode">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LanguageReportPdfBarcode"/>
+    </request-map>
+    
+    <!-- end of request mappings -->
+
+    <!-- View Mappings -->
+    <view-map name="main" type="screen" page="component://language/widget/language/CommonScreens.xml#main"/>
+
+    <view-map name="FindLanguage" type="screen" page="component://language/widget/language/LanguageScreens.xml#FindLanguage"/>
+    <view-map name="FindSystemLanguage" type="screen" page="component://language/widget/language/LanguageScreens.xml#FindSystemLanguage"/>
+    <view-map name="EditLanguage" type="screen" page="component://language/widget/language/LanguageScreens.xml#EditLanguage"/>
+    <view-map name="EditSystemLanguage" type="screen" page="component://language/widget/language/LanguageScreens.xml#EditSystemLanguage"/>
+    <view-map name="EditLanguageLayer" type="screen" page="component://language/widget/language/LanguageScreens.xml#EditLanguageLayer"/>
+    <view-map name="EditSystemLanguageLayer" type="screen" page="component://language/widget/language/LanguageScreens.xml#EditSystemLanguageLayer"/>
+    <view-map name="EditLanguageItems" type="screen" page="component://language/widget/language/LanguageScreens.xml#EditLanguageItems"/>
+    <view-map name="EditLanguageFeatureAppls" type="screen" page="component://language/widget/language/LanguageScreens.xml#EditLanguageFeatureAppls"/>
+    <view-map name="ListLanguageExport" type="screenxls" page="component://language/widget/language/LanguageScreens.xml#ListLanguageExport" content-type="application/vnd.ms-excel"/>
+    <view-map name="LanguageReportHtml" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageReport"/>
+    <view-map name="LanguageReportXls" type="screenxls" page="component://language/widget/language/LanguageScreens.xml#LanguageReport" content-type="application/vnd.ms-excel"/>
+    <view-map name="LanguageReportPdf" type="screenfop" page="component://language/widget/language/LanguageScreens.xml#LanguageReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="LanguageReportPdfBarcode" type="screenfop" page="component://language/widget/language/LanguageScreens.xml#LanguageReportPdfBarcode" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="FindLanguageFeature" type="screen" page="component://language/widget/language/LanguageFeatureScreens.xml#FindLanguageFeature"/>
+    <view-map name="EditLanguageFeature" type="screen" page="component://language/widget/language/LanguageFeatureScreens.xml#EditLanguageFeature"/>
+    <view-map name="EditLanguageFeatureLanguageAppls" type="screen" page="component://language/widget/language/LanguageFeatureScreens.xml#EditLanguageFeatureLanguageAppls"/>
+
+    <view-map name="FormWidgetLanguages" type="screen" page="component://language/widget/language/FormWidgetLanguageScreens.xml#FormWidgetLanguages"/>
+
+    <view-map name="LookupLanguageFeature" type="screen" page="component://language/widget/language/LanguageFeatureScreens.xml#LookupLanguageFeature"/>
+    <view-map name="LookupPartyGroupByName" type="screen" page="component://language/widget/language/FormWidgetLanguageLookupScreens.xml#LookupPartyGroupByName"/>
+
+    <!-- ajax view mappings -->
+    <view-map name="findLanguageAjax" type="screen" page="component://language/widget/language/LanguageAjaxScreens.xml#AjaxLanguage"/>
+    <view-map name="ListLanguageFormOnly" type="screen" page="component://language/widget/language/LanguageAjaxScreens.xml#ListLanguageFormOnly"/>
+    <view-map name="CreateLanguageFormOnly" type="screen" page="component://language/widget/language/LanguageAjaxScreens.xml#CreateLanguageFormOnly"/>
+    <view-map name="printLanguageFOPFonts" type="screenfop" page="component://language/widget/language/FormWidgetLanguageScreens.xml#printLanguageFOPFonts" content-type="application/pdf"  encoding="none"/>
+
+    <view-map name="LanguageGeoLocationPointSet1" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageGeoLocationPointSet1"/>
+    <view-map name="LanguageGeoLocationPointSet2" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageGeoLocationPointSet2"/>
+    <view-map name="LanguageGeoLocationPointSet3" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageGeoLocationPointSet3"/>
+    <view-map name="LanguageGeoLocationPointSet4" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageGeoLocationPointSet4"/>
+    <view-map name="LanguageGeoLocationAddress" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageGeoLocationAddress"/>
+    <view-map name="LanguageOsmGeoLocationPointSet1" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageOsmGeoLocationPointSet1"/>
+    <view-map name="LanguageOsmGeoLocationPointSet2" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageOsmGeoLocationPointSet2"/>
+    <view-map name="LanguageOsmGeoLocationPointSet3" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageOsmGeoLocationPointSet3"/>
+    <view-map name="LanguageOsmGeoLocationPointSet4" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageOsmGeoLocationPointSet4"/>
+
+    <!-- Flot view mapping -->
+    <view-map name="LanguageBarChart" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageBarChart"/>
+    <view-map name="LanguagePieChart" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguagePieChart"/>
+    
+    <!--  content FOP language -->
+    <view-map name="fonts.fo" type="screenfop" page="component://content/widget/CommonScreens.xml#fonts.fo" content-type="application/pdf" encoding="none"/>
+
+    <!-- Supported Content Types -->
+    <!--
+        text/html
+        application/pdf
+        application/postscript
+        application/vnd.ms-excel
+        application/vnd.ms-word
+        application/vnd.ms-powerpoint
+        application/vnd.oasis.opendocument.text
+        application/vnd.oasis.opendocument.spreadsheet
+        application/vnd.oasis.opendocument.presentation
+        application/vnd.openxmlformats-officedocument.wordprocessingml.document
+        application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+        application/vnd.openxmlformats-officedocument.presentationml.presentation
+     -->
+
+    <view-map name="LanguageReportPdfOptions" type="screen" page="component://language/widget/language/LanguageScreens.xml#LanguageReportPdfOptions"/>
+    <!-- end of view mappings -->
+</site-conf>

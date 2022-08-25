@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="LanguageAppBar" title="${uiLabelMap.LanguageApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="LanguageMenuItem" title="${uiLabelMap.LanguageLanguage}">
+            <link target="FindLanguage"/>
+        </menu-item>
+<!--        <menu-item name="LanguageFeature" title="${uiLabelMap.LanguageFeature}">-->
+<!--            <link target="FindLanguageFeature"/>-->
+<!--        </menu-item>-->
+<!--        <menu-item name="FormWidgetLanguages" title="${uiLabelMap.LanguageFormWidgetLanguages}">-->
+<!--            <link target="FormWidgetLanguages"/>-->
+<!--        </menu-item>-->
+<!--        <menu-item name="AjaxLanguage" title="${uiLabelMap.LanguageAjaxLanguages}">-->
+<!--            <link target="authview/findLanguageAjax"/>-->
+<!--        </menu-item>-->
+<!--        <menu-item name="portalPage" parent-portal-page-value="LANGUAGE"/>-->
+<!--        <menu-item name="Dashboard" title="${uiLabelMap.LanguageDashboard}" align-style="opposed">-->
+<!--            <link target="ManagePortalPages" link-type="anchor">-->
+<!--                <parameter param-name="parentPortalPageId" value="LANGUAGE"/>-->
+<!--            </link>-->
+<!--        </menu-item>-->
+<!--        <menu-item name="LanguageGeoLocation" title="${uiLabelMap.CommonGeoLocation}">-->
+<!--            <link target="LanguageGeoLocationPointSet1"/>-->
+<!--        </menu-item>-->
+<!--        <menu-item name="LanguageCharts" title="${uiLabelMap.LanguageChart}">-->
+<!--            <link target="LanguageBarChart"/>-->
+<!--        </menu-item>-->
+<!--        <menu-item name="LanguageCompleteFop" title="${uiLabelMap.ContentFopFonts}">-->
+<!--                <link target="fonts.pdf" target-window="_BLANK"/>-->
+<!--        </menu-item>-->
+<!--        <menu-item name="LanguageCompoundWidgets" title="${uiLabelMap.LanguageCompoundWidgets}">-->
+<!--                <link target="CompoundWidgets1"/>-->
+<!--        </menu-item>-->
+    </menu>
+    <menu name="LanguageMenuItem" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="FindLanguage" title="${uiLabelMap.TranslationLanguage}">
+            <link target="FindLanguage"/>
+        </menu-item>
+        <menu-item name="SystemLanguage" title="${uiLabelMap.SystemLanguage}">
+            <link target="FindSystemLanguage"/>
+        </menu-item>
+    </menu>
+
+    <menu name="EditLanguage" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditLanguage" title="${uiLabelMap.LanguageLanguage}">
+            <link target="EditLanguage">
+                <parameter param-name="languageId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditLanguageItems" title="${uiLabelMap.CommonItems}">
+            <link target="EditLanguageItems">
+                <parameter param-name="languageId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditLanguageFeatureAppls" title="${uiLabelMap.LanguageFeatures}">
+            <link target="EditLanguageFeatureAppls">
+                <parameter param-name="languageId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="EditLanguageFeature" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditLanguageFeature" title="${uiLabelMap.LanguageFeature}">
+            <link target="EditLanguageFeature"/>
+        </menu-item>
+        <menu-item name="EditLanguageFeatureLanguageAppls" title="${uiLabelMap.LanguageLanguages}">
+            <link target="EditLanguageFeatureLanguageAppls"/>
+        </menu-item>
+    </menu>
+
+    <menu name="LanguageGeoLocation" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="LanguageGeoLocationPointSet1" title="${uiLabelMap.PointSet1}"><link target="LanguageGeoLocationPointSet1"/></menu-item>
+        <menu-item name="LanguageGeoLocationPointSet2" title="${uiLabelMap.PointSet2}"><link target="LanguageGeoLocationPointSet2"/></menu-item>
+        <menu-item name="LanguageGeoLocationPointSet3" title="${uiLabelMap.PointSet3}"><link target="LanguageGeoLocationPointSet3"/></menu-item>
+        <menu-item name="LanguageGeoLocationPointSet4" title="${uiLabelMap.PointSet4}"><link target="LanguageGeoLocationPointSet4"/></menu-item>
+        <menu-item name="LanguageGeoLocationAddress" title="${uiLabelMap.LanguagePointAddress}"><link target="LanguageGeoLocationAddress"/></menu-item>
+        <!--Languages using openstreetmap -->
+        <menu-item name="LanguageOsmGeoLocationPointSet1" title="${uiLabelMap.OsmPointSet1}"><link target="LanguageOsmGeoLocationPointSet1"/></menu-item>
+        <menu-item name="LanguageOsmGeoLocationPointSet2" title="${uiLabelMap.OsmPointSet2}"><link target="LanguageOsmGeoLocationPointSet2"/></menu-item>
+        <menu-item name="LanguageOsmGeoLocationPointSet3" title="${uiLabelMap.OsmPointSet3}"><link target="LanguageOsmGeoLocationPointSet3"/></menu-item>
+        <menu-item name="LanguageOsmGeoLocationPointSet4" title="${uiLabelMap.OsmPointSet4}"><link target="LanguageOsmGeoLocationPointSet4"/></menu-item>
+    </menu>
+
+    <menu name="LanguageCharts" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="LanguageBarChart" title="${uiLabelMap.LanguageBarChart}"><link target="LanguageBarChart"/></menu-item>
+        <menu-item name="LanguagePieChart" title="${uiLabelMap.LanguagePieChart}"><link target="LanguagePieChart"/></menu-item>
+    </menu>
+
+</menus>

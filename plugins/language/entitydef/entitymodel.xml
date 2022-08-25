@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of an Apache OFBiz Component</title>
+    <description>None</description>
+    <version>1.0</version>
+    <default-resource-name>LanguageEntityLabels</default-resource-name>
+
+    <!-- ========================================================= -->
+    <!-- ======================== Data Model ===================== -->
+    <!-- The modules in this file are as follows:                  -->
+    <!--  - org.apache.ofbiz.language.language -->
+    <!--  - org.apache.ofbiz.language.feature -->
+    <!-- ========================================================= -->
+
+    <!-- ========================================================= -->
+    <!-- org.apache.ofbiz.language.language -->
+    <!-- ========================================================= -->
+
+    <entity entity-name="MatisLanguage" package-name="org.apache.ofbiz.language.language" title="Language Entity">
+        <field name="languageId" type="id"><description>primary sequenced ID</description></field><!-- ID -->
+        <field name="statusId" type="id"></field><!-- 학습 상태 -->
+        <field name="sourceLanguage" type="id"></field><!-- 출발 언어(언어코드) -->
+        <field name="targetLanguage" type="id"></field><!-- 도착 언어(언어코드) -->
+        <field name="useLanguage" type="indicator"></field><!-- 사용 여부 -->
+        <field name="authorId" type="name"></field><!-- 수정자 -->
+        <field name="description" type="description"></field><!-- 설명 -->
+        <prim-key field="languageId"/>
+        <relation type="one" fk-name="EXMPL_STTS" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="SystemLanguage" package-name="org.apache.ofbiz.language.language" title="System Language Entity">
+        <field name="systemLanguageId" type="id"></field>
+        <field name="systemLanguageName" type="name"></field>
+        <field name="systemLanguageCode" type="id"></field>
+        <field name="useSystemLanguage" type="indicator"></field>
+        <field name="authorId" type="name"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="systemLanguageId"/>
+    </entity>
+
+
+    <entity entity-name="LanguageItem" package-name="org.apache.ofbiz.language.language" title="Language Item Entity">
+        <field name="languageId" type="id"></field>
+        <field name="languageItemSeqId" type="id"><description>secondary sequenced ID</description></field>
+        <field name="description" type="description"></field>
+        <field name="amount" type="floating-point"></field>
+        <field name="amountUomId" type="id"></field>
+        <prim-key field="languageId"/>
+        <prim-key field="languageItemSeqId"/>
+        <relation type="one" fk-name="EXMPLIT_UOM" title="Amount" rel-entity-name="Uom">
+            <key-map field-name="amountUomId" rel-field-name="uomId"/>
+        </relation>
+        <relation type="one" fk-name="EXMPLIT_EXMP" rel-entity-name="MatisLanguage">
+            <key-map field-name="languageId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="LanguageStatus" package-name="org.apache.ofbiz.language.language" title="Language Status Entity">
+        <field name="languageId" type="id"></field>
+        <field name="statusDate" type="date-time"></field>
+        <field name="statusEndDate" type="date-time"></field>
+        <field name="changeByUserLoginId" type="id-vlong"></field>
+        <field name="statusId" type="id"></field>
+        <prim-key field="languageId"/>
+        <prim-key field="statusDate"/>
+        <relation type="one" fk-name="EXMPLST_EXMPL" rel-entity-name="MatisLanguage">
+            <key-map field-name="languageId"/>
+        </relation>
+        <relation type="one" fk-name="EXMPLST_STTS" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
+        </relation>
+        <relation type="one" fk-name="EXMPLST_STTS_USER" rel-entity-name="UserLogin">
+            <key-map field-name="changeByUserLoginId" rel-field-name="userLoginId"/>
+        </relation>
+    </entity>
+
+
+    <entity entity-name="LanguageType" package-name="org.apache.ofbiz.language.language" title="Language Type Entity">
+        <field name="languageTypeId" type="id"></field>
+        <field name="parentTypeId" type="id"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="languageTypeId"/>
+        <relation type="one" fk-name="EXMPLTP_PAR" rel-entity-name="LanguageType">
+            <key-map field-name="parentTypeId" rel-field-name="languageTypeId"/>
+        </relation>
+    </entity>
+
+<!--    <entity entity-name="BritLanguageStatus" package-name="org.apache.ofbiz.language.language" title="Brit Language Status Entity">-->
+<!--        <field name="statusId" type="id"></field>-->
+<!--        <field name="statusTypeId" type="id"></field>-->
+<!--        <field name="statusCode" type="short-varchar"></field>-->
+<!--        <field name="sequenceId" type="id"></field>-->
+<!--        <field name="discription" type="description"></field>-->
+<!--        <prim-key field="statusId"/>-->
+<!--        <relation type="one" fk-name="STATUS_TO_TYPE" rel-entity-name="BritStatusType">-->
+<!--            <key-map field-name="statusTypeId"/>-->
+<!--        </relation>-->
+<!--    </entity>-->
+<!--    <entity entity-name="BritStatusType" package-name="org.apache.ofbiz.language.language" title="Brit Language Status Type Entity">-->
+<!--        <field name="statusTypeId" type="id"></field>-->
+<!--        <field name="parentTypeId" type="id"></field>-->
+<!--        <field name="hasTable" type="indicator"></field>-->
+<!--        <field name="description" type="description"></field>-->
+<!--        <prim-key field="statusTypeId"/>-->
+<!--        <relation type="one" fk-name="STATUS_TYPE_PARENT" title="Parent" rel-entity-name="BritStatusType">-->
+<!--            <key-map field-name="parentTypeId" rel-field-name="statusTypeId"/>-->
+<!--        </relation>-->
+<!--    </entity>-->
+
+<!--    <entity entity-name="BritStatusType" package-name="org.apache.ofbiz.language.language" title="Brit Language Status Type Entity">-->
+<!--        <field name="statusTypeId" type="id"></field>-->
+<!--        <field name="parentTypeId" type="id"></field>-->
+<!--        <field name="hasTable" type="indicator"></field>-->
+<!--        <field name="description" type="description"></field>-->
+<!--        <prim-key field="statusTypeId"/>-->
+<!--        <relation type="one" fk-name="STATUS_TYPE_PARENT" title="Parent" rel-entity-name="BritStatusType">-->
+<!--            <key-map field-name="parentTypeId" rel-field-name="statusTypeId"/>-->
+<!--        </relation>-->
+<!--    </entity>-->
+
+
+    <!-- ========================================================= -->
+    <!-- org.apache.ofbiz.language.feature -->
+    <!-- ========================================================= -->
+
+    <entity entity-name="LanguageFeature"
+        package-name="org.apache.ofbiz.language.feature"
+        title="Language Feature Entity">
+        <field name="languageFeatureId" type="id"><description>primary sequenced ID</description></field>
+        <field name="featureSourceEnumId" type="id"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="languageFeatureId"/>
+        <relation type="one" fk-name="EXFT_ENUM" rel-entity-name="Enumeration">
+            <key-map field-name="featureSourceEnumId" rel-field-name="enumId"/>
+        </relation>
+    </entity>
+    <entity entity-name="LanguageFeatureAppl"
+        package-name="org.apache.ofbiz.language.feature"
+        title="Language Feature Application Entity">
+        <field name="languageId" type="id"></field>
+        <field name="languageFeatureId" type="id"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <field name="languageFeatureApplTypeId" type="id"></field>
+        <field name="sequenceNum" type="numeric"></field>
+        <prim-key field="languageId"/>
+        <prim-key field="languageFeatureId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="EXFTAP_EXPL" rel-entity-name="MatisLanguage">
+            <key-map field-name="languageId"/>
+        </relation>
+        <relation type="one" fk-name="EXFTAP_EXFT" rel-entity-name="LanguageFeature">
+            <key-map field-name="languageFeatureId"/>
+        </relation>
+        <relation type="one" fk-name="EXFTAP_TYP" rel-entity-name="LanguageFeatureApplType">
+            <key-map field-name="languageFeatureApplTypeId"/>
+        </relation>
+    </entity>
+    <entity entity-name="LanguageFeatureApplType"
+        package-name="org.apache.ofbiz.language.feature"
+        title="Language Feature Application Type Entity">
+        <field name="languageFeatureApplTypeId" type="id"></field>
+        <field name="parentTypeId" type="id"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="languageFeatureApplTypeId"/>
+        <relation type="one" fk-name="EXFTAPTP_PAR" rel-entity-name="LanguageFeatureApplType">
+            <key-map field-name="parentTypeId" rel-field-name="languageFeatureApplTypeId"/>
+        </relation>
+    </entity>
+</entitymodel>

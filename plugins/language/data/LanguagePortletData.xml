@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+    <PortalPortlet portalPortletId="LANGUAGE_1" portletName="Language 1" description="Language portlet n. 1"
+        screenName="LanguagePortlet1" screenLocation="component://language/widget/language/PortletScreens.xml"
+        editFormName="LanguagePortlet1Edit" editFormLocation="component://language/widget/language/PortletEditForms.xml"
+        screenshot="/images/ofbiz_logo.png"/>
+
+    <PortalPortlet portalPortletId="LANGUAGE_2" portletName="Language 2" description="Language portlet n. 2"
+        screenName="LanguagePortlet2" screenLocation="component://language/widget/language/PortletScreens.xml"
+        editFormName="LanguagePortlet2Edit" editFormLocation="component://language/widget/language/PortletEditForms.xml"
+        screenshot="/images/opentravelsystem_logo.jpg"/>
+
+    <PortalPortlet portalPortletId="LANGUAGE_3" portletName="Language 3" description="Language portlet n. 3"
+        screenName="LanguagePortlet3" screenLocation="component://language/widget/language/PortletScreens.xml"
+        editFormName="LanguagePortlet3Edit" editFormLocation="component://language/widget/language/PortletEditForms.xml"/>
+
+    <PortletCategory portletCategoryId="LANGUAGE" description="Language Portlet(s)"/>
+    <PortletPortletCategory portalPortletId="LANGUAGE_1" portletCategoryId="LANGUAGE"/>
+    <PortletPortletCategory portalPortletId="LANGUAGE_2" portletCategoryId="LANGUAGE"/>
+    <PortletPortletCategory portalPortletId="LANGUAGE_3" portletCategoryId="LANGUAGE"/>
+</entity-engine-xml>

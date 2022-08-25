@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+    <StatusType description="Language" statusTypeId="LANGUAGE_STATUS" hasTable="N"/>
+    <StatusItem description="학습대기" sequenceId="01" statusCode="WAITING" statusId="WF_LEARNING" statusTypeId="LANGUAGE_STATUS"/>
+    <StatusItem description="1차학습" sequenceId="02" statusCode="LEARNING_01" statusId="BP_LEARNING" statusTypeId="LANGUAGE_STATUS"/>
+    <StatusItem description="2차학습" sequenceId="03" statusCode="LEARNING_02" statusId="BS_LEARNING" statusTypeId="LANGUAGE_STATUS"/>
+    <StatusItem description="3차학습" sequenceId="04" statusCode="LEARNING_03" statusId="BT_LEARNING" statusTypeId="LANGUAGE_STATUS"/>
+    <StatusItem description="학습완료" sequenceId="05" statusCode="COMPLETE" statusId="BL_COMPLETE" statusTypeId="LANGUAGE_STATUS"/>
+    <StatusValidChange statusId="WF_LEARNING" statusIdTo="BP_LEARNING"/>
+    <StatusValidChange statusId="WF_LEARNING" statusIdTo="BS_LEARNING"/>
+    <StatusValidChange statusId="WF_LEARNING" statusIdTo="BT_LEARNING"/>
+    <StatusValidChange statusId="WF_LEARNING" statusIdTo="BL_COMPLETE"/>
+    <StatusValidChange statusId="BP_LEARNING" statusIdTo="WF_LEARNING"/>
+    <StatusValidChange statusId="BP_LEARNING" statusIdTo="BS_LEARNING"/>
+    <StatusValidChange statusId="BP_LEARNING" statusIdTo="BT_LEARNING"/>
+    <StatusValidChange statusId="BP_LEARNING" statusIdTo="BL_COMPLETE"/>
+    <StatusValidChange statusId="BS_LEARNING" statusIdTo="WF_LEARNING"/>
+    <StatusValidChange statusId="BS_LEARNING" statusIdTo="BP_LEARNING"/>
+    <StatusValidChange statusId="BS_LEARNING" statusIdTo="BT_LEARNING"/>
+    <StatusValidChange statusId="BS_LEARNING" statusIdTo="BL_COMPLETE"/>
+    <StatusValidChange statusId="BT_LEARNING" statusIdTo="WF_LEARNING"/>
+    <StatusValidChange statusId="BT_LEARNING" statusIdTo="BP_LEARNING"/>
+    <StatusValidChange statusId="BT_LEARNING" statusIdTo="BS_LEARNING"/>
+    <StatusValidChange statusId="BT_LEARNING" statusIdTo="BL_COMPLETE"/>
+    <StatusValidChange statusId="BL_COMPLETE" statusIdTo="WF_LEARNING"/>
+    <StatusValidChange statusId="BL_COMPLETE" statusIdTo="BP_LEARNING"/>
+    <StatusValidChange statusId="BL_COMPLETE" statusIdTo="BS_LEARNING"/>
+    <StatusValidChange statusId="BL_COMPLETE" statusIdTo="BT_LEARNING"/>
+
+    <EnumerationType description="Language Feature Source" enumTypeId="EXMPL_FEAT_SOURCE" hasTable="N"/>
+    <Enumeration description="Customer" enumCode="CUSTOMER" enumId="EXFTSRC_CUSTOMER" sequenceId="01" enumTypeId="EXMPL_FEAT_SOURCE"/>
+    <Enumeration description="Partner" enumCode="PARTNER" enumId="EXFTSRC_PARTNER" sequenceId="02" enumTypeId="EXMPL_FEAT_SOURCE"/>
+    <Enumeration description="Employee" enumCode="EMPLOYEE" enumId="EXFTSRC_EMPLOYEE" sequenceId="03" enumTypeId="EXMPL_FEAT_SOURCE"/>
+
+    <MatisLanguage sourceLanguage="ko" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ko" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="en" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="en" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="de" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="de" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="ja" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ja" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="it" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="it" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="zhCN" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="ru" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="ru" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="vi" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="vi" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="fr" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="fr" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="mn" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="mn" targetLanguage="sv" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <MatisLanguage sourceLanguage="sv" targetLanguage="ko" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="en" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="de" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="ja" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="it" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="zhCN" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="ru" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="vi" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="fr" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+    <MatisLanguage sourceLanguage="sv" targetLanguage="mn" useLanguage="N" languageTypeId="BRIT_LANGUAGE" statusId="WF_LEARNING"/>
+
+    <SystemLanguage systemLanguageName="한국어" systemLanguageCode="ko" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="영어" systemLanguageCode="en" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="독일어" systemLanguageCode="de" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="일본어" systemLanguageCode="ja" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="이탈리아어" systemLanguageCode="it" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="중국어" systemLanguageCode="zhCN" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="러시아어" systemLanguageCode="ru" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="베트남어" systemLanguageCode="vi" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="프랑스어" systemLanguageCode="fr" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="몽골어" systemLanguageCode="mn" useSystemLanguage="N"/>
+    <SystemLanguage systemLanguageName="스웨덴어" systemLanguageCode="sv" useSystemLanguage="N"/>
+
+<!--    <MatisLanguage languageId="EX01" languageName="Language 1" languageTypeId="CONTRIVED" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX02" languageName="Language 2" languageTypeId="CONTRIVED" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX03" languageName="Language 3" languageTypeId="CONTRIVED" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX04" languageName="Language 4" languageTypeId="REAL_WORLD" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX05" languageName="Language 5" languageTypeId="REAL_WORLD" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX06" languageName="Language 6" languageTypeId="MADE_UP" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX07" languageName="Language 7" languageTypeId="MADE_UP" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX08" languageName="Language 8" languageTypeId="MADE_UP" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX09" languageName="Language 9" languageTypeId="MADE_UP" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX10" languageName="Language 10" languageTypeId="MADE_UP" statusId="EXST_IN_DESIGN"/>-->
+<!--    <MatisLanguage languageId="EX11" languageName="Language 11" languageTypeId="INSPIRED" statusId="EXST_IN_DESIGN" description="mMy inspired language 11 description"/>-->
+<!--    <MatisLanguage languageId="EX12" languageName="Language 12" languageTypeId="INSPIRED" statusId="EXST_IN_DESIGN" description="mMy inspired language 12 description"/>-->
+<!--    <create>-->
+<!--        <MatisLanguage languageId="EX13" languageName="Language 13" languageTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>-->
+<!--        <MatisLanguage languageId="EX14" languageName="Language 14" languageTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>-->
+<!--    </create>-->
+<!--    <create-replace>-->
+<!--        <MatisLanguage languageId="EX12" languageName="Language 12 after replace" languageTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>-->
+<!--    </create-replace>-->
+<!--    <create-update>-->
+<!--        <MatisLanguage languageId="EX12" languageName="Language 11 after update" languageTypeId="INSPIRED" statusId="EXST_IN_DESIGN"/>-->
+<!--    </create-update>-->
+<!--    <delete>-->
+<!--        <MatisLanguage languageId="EX09"/>-->
+<!--    </delete>-->
+<!--    <MatisLanguage languageId="EX10" languageName="Language 10 after update"/>-->
+
+    <LanguageItem languageId="10000" languageItemSeqId="00001" description="EX1-001" amount="10"/>
+    <LanguageItem languageId="10000" languageItemSeqId="00002" description="EX1-002" amount="20"/>
+    <LanguageItem languageId="10001" languageItemSeqId="00001" description="EX2-001" amount="10"/>
+    <LanguageItem languageId="10001" languageItemSeqId="00002" description="EX2-002" amount="20"/>
+    <LanguageItem languageId="10001" languageItemSeqId="00003" description="EX2-003" amount="30"/>
+
+    <LanguageStatus languageId="10000" statusDate="2010-01-02 00:00:00" statusEndDate="2011-01-02 00:00:00" statusId="WF_LEARNING"/>
+    <LanguageStatus languageId="10000" statusDate="2011-01-02 00:00:01" statusEndDate="2012-01-02 00:00:00" statusId="BP_LEARNING"/>
+    <LanguageStatus languageId="10000" statusDate="2012-01-02 00:00:00" statusEndDate="2013-01-02 00:00:00" statusId="BL_COMPLETE"/>
+    <LanguageStatus languageId="10001" statusDate="2010-01-02 00:00:00" statusEndDate="2011-01-02 00:00:00" statusId="WF_LEARNING"/>
+    <LanguageStatus languageId="10001" statusDate="2011-01-02 00:00:01" statusEndDate="2012-01-02 00:00:00" statusId="BP_LEARNING"/>
+    <LanguageStatus languageId="10001" statusDate="2012-01-02 00:00:00" statusEndDate="2013-01-02 00:00:00" statusId="BL_COMPLETE"/>
+</entity-engine-xml>

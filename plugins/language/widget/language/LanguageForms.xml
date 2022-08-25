@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <form name="FindLanguages" type="single" target="FindLanguage" default-entity-name="MatisLanguage">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="sourceLanguage" title="${uiLabelMap.sourceLanguage}"><text-find/></field>
+        <field name="targetLanguage" title="${uiLabelMap.targetLanguage}"><text-find/></field>
+        <field name="statusId" title="${uiLabelMap.laugnageStatus}">
+            <drop-down allow-empty="true" current-description="">
+                <entity-options key-field-name="statusId" entity-name="LanguageStatusItem"/>
+            </drop-down>
+        </field>
+        <field name="useSystemLanguage" title="${uiLabelMap.useLanguage}">
+            <check>
+                <option key="Y" description="${uiLabelMap.languageY}"/>
+                <option key="N" description="${uiLabelMap.languageN}"/>
+            </check>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.languageSearch}"><submit/></field>
+    </form>
+
+    <form name="FindSystemLanguages" type="single" target="FindSystemLanguage" default-entity-name="SystemLanguage">
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="systemLanguageName" title="${uiLabelMap.systemLanguageName}"><text-find/></field>
+        <field name="systemLanguageCode" title="${uiLabelMap.systemLanguageCode}"><text-find/></field>
+        <field name="useSystemLanguage" title="${uiLabelMap.useSystemLanguage}">
+            <check>
+                <option key="Y" description="${uiLabelMap.languageY}"/>
+                <option key="N" description="${uiLabelMap.languageN}"/>
+            </check>
+        </field>
+        <field name="searchButton" title="${uiLabelMap.languageSearch}"><submit/></field>
+    </form>
+
+    <grid name="ListLanguages" list-name="listIt" paginate-target="FindLanguage" default-entity-name="MatisLanguage" separate-columns="true"
+          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="languageCtx"/>
+                <field-map field-name="entityName" value="MatisLanguage"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            <set field="sortField" from-field="parameters.sortField"/>
+        </actions>
+        <alt-row-style use-when="'EXST_APPROVED'.equals(statusId)" style="Validate"/>
+        <alt-row-style use-when="'EXST_CANCELLED'.equals(statusId)" style="Warn"/>
+        <field name="languageName" title="${uiLabelMap.languageName}"><display description="${uiLabelMap.${sourceLanguage}} - ${uiLabelMap.${targetLanguage}}"/></field>
+        <field name="sourceLanguage" title="${uiLabelMap.sourceLanguage}"><display/></field>
+        <field name="targetLanguage" title="${uiLabelMap.targetLanguage}"><display/></field>
+        <field name="statusId" title="${uiLabelMap.laugnageStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="useLanguage" title="${uiLabelMap.useLanguage}" sort-field="true"><display/></field>
+        <field name="lastUpdatedStamp" title="${uiLabelMap.languageDate}" sort-field="true"><display type="date-time"/></field>
+        <field name="authorId" title="${uiLabelMap.authorId}"><display default-value="${userLogin.userLoginId}"/></field>
+        <field name="editLanguage" title="${uiLabelMap.edit}" widget-style="buttontext">
+            <hyperlink description="[${uiLabelMap.${sourceLanguage}} - ${uiLabelMap.${targetLanguage}}] ${uiLabelMap.edit}" target="EditLanguage" also-hidden="false">
+                <parameter param-name="languageId"/>
+            </hyperlink>
+        </field>
+        <field name="delete" title="${uiLabelMap.delete}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.delete}" target="deleteLanguage" also-hidden="false" confirmation-message="${languageName}를 삭제하시겠습니까?">
+                <parameter param-name="languageId"/>
+            </hyperlink>
+        </field>
+    </grid>
+
+    <grid name="ListSystemLanguages" list-name="listIt" paginate-target="FindSystemLanguage" default-entity-name="SystemLanguage" separate-columns="true"
+          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="languageCtx"/>
+                <field-map field-name="entityName" value="SystemLanguage"/>
+                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+            <set field="sortField" from-field="parameters.sortField"/>
+        </actions>
+        <field name="systemLanguageName" title="${uiLabelMap.systemLanguageName}" sort-field="true"><display description="${uiLabelMap.${systemLanguageCode}}"/></field>
+        <field name="systemLocalLanguageName" title="${uiLabelMap.systemLocalLanguageName}"><display description="${uiLabelMap.${systemLanguageName}}"/></field>
+        <field name="systemLanguageCode" title="${uiLabelMap.systemLanguageCode}"><display/></field>
+        <field name="useSystemLanguage" title="${uiLabelMap.useLanguage}" sort-field="true"><display/></field>
+        <field name="lastUpdatedStamp" title="${uiLabelMap.languageDate}" sort-field="true"><display type="date-time"/></field>
+        <field name="authorId" title="${uiLabelMap.authorId}"><display default-value="${userLogin.userLoginId}"/></field>
+        <field name="editSystemLanguage" title="${uiLabelMap.edit}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.systemLanguageName} ${uiLabelMap.edit}" target="EditSystemLanguage" also-hidden="false">
+                <parameter param-name="systemLanguageId"/>
+            </hyperlink>
+        </field>
+        <field name="delete" title="${uiLabelMap.delete}" widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.delete}" target="deleteSystemLanguage" also-hidden="false" confirmation-message="${systemLanguageName}를 삭제하시겠습니까?">
+                <parameter param-name="systemLanguageId"/>
+            </hyperlink>
+        </field>
+    </grid>
+
+    <!--language form with include an other form -->
+    <grid name="ListLanguagesWithFeatures" extends="ListLanguages" extends-resource="component://language/widget/language/LanguageForms.xml">
+        <actions>
+            <call-parent-actions/>
+        </actions>
+        <field name="features"><include-form name="LanguageFeaturesInLine" location="component://language/widget/language/LanguageForms.xml"/></field>
+    </grid>
+    <form name="LanguageFeaturesInLine" type="list" default-table-style="basic-table light-grid" default-entity-name="LanguageFeatureAppl">
+        <actions>
+            <entity-condition entity-name="LanguageFeatureAppl">
+                <condition-expr field-name="languageId" from-field="languageId"/>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="LanguageFeatureAppl" default-field-type="display"/>
+        <field name="languageId"><ignored/></field>
+    </form>
+
+    <!--language form with include a screen -->
+    <grid name="ListLanguagesWithItems" extends="ListLanguages" extends-resource="component://language/widget/language/LanguageForms.xml">
+        <actions>
+            <call-parent-actions/>
+        </actions>
+        <field name="items"><include-screen name="LanguageItemsInLine" location="component://language/widget/language/LanguageScreens.xml"/></field>
+    </grid>
+
+    <grid name="ListLanguageItemsInLine" default-table-style="basic-table light-grid">
+        <actions>
+            <entity-condition entity-name="LanguageItem">
+                <condition-expr field-name="languageId" from-field="languageId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="LanguageItem" default-field-type="display"/>
+        <field name="languageId"><ignored/></field>
+    </grid>
+
+    <!--language form with include a grid -->
+    <grid name="ListLanguagesWithStatus" extends="ListLanguages" extends-resource="component://language/widget/language/LanguageForms.xml">
+        <actions>
+            <call-parent-actions/>
+        </actions>
+        <field name="status"><include-grid name="LanguageStatusInLine" location="component://language/widget/language/LanguageForms.xml"/></field>
+    </grid>
+
+    <grid name="LanguageStatusInLine" default-table-style="basic-table light-grid" default-entity-name="LanguageStatus">
+        <actions>
+            <entity-condition entity-name="LanguageStatus">
+                <condition-expr field-name="languageId" from-field="languageId"/>
+                <order-by field-name="statusDate"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-entity entity-name="LanguageStatus" default-field-type="display"/>
+        <field name="languageId"><ignored/></field>
+    </grid>
+
+    <grid name="ListLanguageExport" extends="ListLanguages" extends-resource="component://language/widget/language/LanguageForms.xml" paginate="false">
+        <actions>
+            <call-parent-actions/>
+        </actions>
+    </grid>
+
+    <!-- Typically, this extended form wouldn't be necessary. The parent form (ListLanguages) would
+        have these attributes.
+         For the Ajax language we want all language entities listed, so the we use the entity-condition
+         instead of the performFind service. -->
+    <grid name="ListLanguagesAjax" extends="ListLanguages" paginate-target="authview/findLanguageAjax">
+        <actions>
+            <entity-condition entity-name="MatisLanguage"><order-by field-name="languageName"/></entity-condition>
+        </actions>
+        <field name="languageId" title="${uiLabelMap.LanguageLanguageId}" widget-style="buttontext">
+            <hyperlink description="${languageId}" target="EditLanguageLayer" also-hidden="false" link-type="layered-modal">
+                <parameter param-name="languageId"/>
+            </hyperlink>
+        </field>
+        <field name="languageName" title="${uiLabelMap.CommonName}" id-name="languageName">
+            <display>
+                <in-place-editor url="/language/control/updateLanguage" cancel-control="button" saving-text="Updating..." text-between-controls=" ">
+                    <simple-editor/>
+                    <field-map field-name="languageId" from-field="languageId"/>
+                    <field-map field-name="statusId"  from-field="statusId"/>
+                </in-place-editor>
+            </display>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}" id-name="description">
+            <display>
+                <in-place-editor url="/language/control/updateLanguage" cancel-control="button" saving-text="Updating..." text-between-controls=" ">
+                    <simple-editor/>
+                    <field-map field-name="languageId" from-field="languageId"/>
+                    <field-map field-name="statusId"  from-field="statusId"/>
+                </in-place-editor>
+            </display>
+        </field>
+        <on-event-update-area event-type="paginate" area-id="ListLanguagesAjax" area-target="ListLanguageFormOnly"/>
+    </grid>
+
+    <form name="EditLanguage" type="single" target="updateLanguage" title="" default-map-name="matisLanguage" default-entity-name="MatisLanguage">
+        <actions>
+            <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
+                <field-map field-name="statusId" from-field="matisLanguage.languageId"/>
+            </entity-one>
+<!--            <set field="anotherText" from-field="matisLanguage.anotherText"/>-->
+        </actions>
+        <alt-target use-when="matisLanguage==null" target="createLanguage"/>
+        <auto-fields-service service-name="updateLanguage"/>
+        <field use-when="matisLanguage!=null" name="languageId" title="${uiLabelMap.LanguageLanguageId}"><display/></field>
+        <field use-when="matisLanguage==null @and languageId==null" name="languageId" title="${uiLabelMap.LanguageLanguageId}"><ignored/></field>
+        <field use-when="matisLanguage==null @and languageId!=null" name="languageId" title="${uiLabelMap.LanguageLanguageId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${languageId}]" also-hidden="false"/></field>
+        <field name="statusId"  use-when="matisLanguage==null" title="${uiLabelMap.laugnageStatus}" required-field="true">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="LanguageStatusItem"/>
+            </drop-down>
+        </field>
+        <field name="statusId" use-when="matisLanguage!=null" title="${uiLabelMap.laugnageStatus}" required-field="true">
+            <drop-down allow-empty="false" current="first-in-list" current-description="${currentStatus.description}">
+                <option key="${currentStatus.statusId}" description="${currentStatus.description}"/>
+                <entity-options entity-name="StatusValidChangeToDetail" key-field-name="statusIdTo" description="${description}">
+                    <entity-constraint name="statusId" env-name="matisLanguage.statusId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="sourceLanguage" title="${uiLabelMap.sourceLanguage}" required-field="true"><text/></field>
+        <field name="targetLanguage" title="${uiLabelMap.targetLanguage}" required-field="true"><text/></field>
+        <field name="authorId" title="${uiLabelMap.authorId}"><hidden/></field>
+        <field name="description" title="${uiLabelMap.languageDescription}"/>
+        <field name="useLanguage" title="${uiLabelMap.useLanguage}"><radio no-current-selected-key="N"><option key="Y" description="${uiLabelMap.languageY}"/><option key="N" description="${uiLabelMap.languageN}"/></radio></field>
+        <field name="submitButton" use-when="matisLanguage==null" title="${uiLabelMap.languageCreate}"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="matisLanguage!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="EditSystemLanguage" type="single" target="updateSystemLanguage" title="" default-map-name="systemLanguage" default-entity-name="SystemLanguage">
+        <alt-target use-when="systemLanguage==null" target="createSystemLanguage"/>
+        <auto-fields-service service-name="updateSystemLanguage"/>
+        <field use-when="systemLanguage!=null" name="systemLanguageId" title="${uiLabelMap.LanguageLanguageId}"><display/></field>
+        <field use-when="systemLanguage==null @and systemLanguageId==null" name="systemLanguageId" title="${uiLabelMap.LanguageLanguageId}"><ignored/></field>
+        <field use-when="systemLanguage==null @and systemLanguageId!=null" name="systemLanguageId" title="${uiLabelMap.LanguageLanguageId}"><display description="${uiLabelMap.CommonCannotBeFound}: [${languageId}]" also-hidden="false"/></field>
+        <field name="systemLanguageName" title="${uiLabelMap.systemLanguageName}" required-field="true"><text/></field>
+        <field name="systemLanguageCode" title="${uiLabelMap.systemLanguageCode}" required-field="true"><text/></field>
+        <field name="authorId" title="${uiLabelMap.authorId}"><hidden/></field>
+        <field name="description" title="${uiLabelMap.languageDescription}"/>
+        <field name="useSystemLanguage" title="${uiLabelMap.useSystemLanguage}"><radio no-current-selected-key="N"><option key="Y" description="${uiLabelMap.languageY}"/><option key="N" description="${uiLabelMap.languageN}"/></radio></field>
+        <field name="submitButton" use-when="systemLanguage==null" title="${uiLabelMap.languageCreate}"><submit button-type="button"/></field>
+        <field name="submitButton" use-when="systemLanguage!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </form>
+
+    <!-- Typically, this extended form wouldn't be necessary. The parent form (EditLanguage) would
+        have these settings. -->
+    <form name="EditLanguageBackgroundSubmit" type="single" extends="EditLanguage" target="updateLanguageAjax">
+        <alt-target use-when="ajaxLanguage==null" target="createLanguageAjax"/>
+        <field name="statusId" use-when="ajaxLanguage==null" title="${uiLabelMap.laugnageStatus}" id-name="statusId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="LanguageStatusItem"/>
+            </drop-down>
+        </field>
+        <on-event-update-area event-type="submit" area-id="ListLanguagesAjax" area-target="ListLanguageFormOnly"/>
+        <!--on-event-update-area event-type="submit" area-id="EditLanguageAjax" area-target="CreateLanguageFormOnly"/--><!-- JLR: this does not seem to be useful -->
+    </form>
+
+    <!-- LanguageItem -->
+    <grid name="ListLanguageItems"  list-name="languageItems"  target="updateLanguageItem">
+        <actions>
+            <entity-condition entity-name="LanguageItem">
+                <condition-expr field-name="languageId" from-field="languageId"/>
+                <order-by field-name="languageItemSeqId"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateLanguageItem"/>
+        <field name="languageId"><hidden/></field>
+        <field name="languageItemSeqId" title="${uiLabelMap.CommonItem}"><display/></field>
+        <field name="description"><text size="30"/></field>
+        <field name="amountUomId" title="${uiLabelMap.CommonUom}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteLanguageItem" also-hidden="false" confirmation-message="${uiLabelMap.CommonConfirmDelete}" image-location="${iconsLocation}/delete.png">
+                <parameter param-name="languageId"/>
+                <parameter param-name="languageItemSeqId"/>
+            </hyperlink>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+    </grid>
+
+    <form name="AddLanguageItem" type="single" target="createLanguageItem" title="">
+        <auto-fields-service service-name="createLanguageItem"/>
+        <field name="languageId"><hidden/></field>
+        <field name="languageItemSeqId"><ignored/><!-- this will be auto-sequenced --></field>
+        <field name="amountUomId" title="${uiLabelMap.CommonUom}">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomAndType" key-field-name="uomId" description="${typeDescription}: ${description} (${abbreviation})">
+                    <entity-order-by field-name="typeDescription"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button" request-confirmation="true"/></field>
+    </form>
+
+    <!-- LanguageFeatureAppl -->
+    <grid name="ListLanguageFeatureAppls"  list-name="languageFeatureAppls"  target="language_updateLanguageFeatureAppl">
+        <actions>
+            <entity-condition entity-name="LanguageFeatureAppl">
+                <condition-expr field-name="languageId" from-field="languageId"/>
+                <order-by field-name="sequenceNum"/>
+            </entity-condition>
+        </actions>
+        <auto-fields-service service-name="updateLanguageFeatureAppl"/>
+        <field name="languageId"><hidden/></field>
+        <field name="languageFeatureId" title="${uiLabelMap.LanguageFeature}">
+            <display-entity entity-name="LanguageFeature">
+                <sub-hyperlink target="EditLanguageFeature" description="${languageFeatureId}" link-style="buttontext">
+                    <parameter param-name="languageFeatureId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="fromDate"><display/></field>
+        <field name="languageFeatureApplTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="LanguageFeatureApplType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteLink" title=" " widget-style="buttontext">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="language_deleteLanguageFeatureAppl" also-hidden="false" image-location="${iconsLocation}/delete.png">
+                <parameter param-name="languageId"/>
+                <parameter param-name="languageFeatureId"/>
+                <parameter param-name="fromDate"/>
+            </hyperlink>
+        </field>
+    </grid>
+
+    <form name="AddLanguageFeatureAppl" type="single" target="language_createLanguageFeatureAppl" title="">
+        <auto-fields-service service-name="createLanguageFeatureAppl"/>
+        <field name="languageId"><hidden/></field>
+        <field name="languageFeatureId" title="${uiLabelMap.LanguageFeature}">
+            <lookup target-form-name="LookupLanguageFeature"/>
+        </field>
+        <field name="languageFeatureApplTypeId" title="${uiLabelMap.CommonType}">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="LanguageFeatureApplType">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+    </form>
+
+    <form name="SetLanguagePdfPassword" type="single" target="LanguageReportPdf" title="">
+        <field name="languageId"><hidden/></field>
+        <field name="ownerPassword" title="${uiLabelMap.PDFOwnerPassword}"><text size="15" maxlength="250"/></field>
+        <field name="userPassword" title="${uiLabelMap.PDFUserPassword}"><text size="15" maxlength="250"/></field>
+        <field name="allowPrint" title="${uiLabelMap.PDFAllowPrint}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="allowCopyContent" title="${uiLabelMap.PDFAllowCopyContent}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="allowEditContent" title="${uiLabelMap.PDFAllowEditContent}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="allowEditAnnotations" title="${uiLabelMap.PDFAllowEditAnnotations}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="allowFillInForms" title="${uiLabelMap.PDFAllowFillInForms}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="allowAccessContent" title="${uiLabelMap.PDFAllowAccessContent}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="allowAssembleDocument" title="${uiLabelMap.PDFAllowAssembleDocument}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="allowPrintHq" title="${uiLabelMap.PDFAllowPrintHq}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="encrypt-metadata" title="${uiLabelMap.PDFEncryptMetadata}">
+            <drop-down>
+                <option key="true" description="${uiLabelMap.CommonTrue}"/>
+                <option key="false" description="${uiLabelMap.CommonFalse}"/>
+            </drop-down>
+        </field>
+        <field name="encryption-length" title="${uiLabelMap.PDFEncryptionLength}"><text size="15"/></field>
+        <field name="submitButton" title="${uiLabelMap.LanguageGeneratePDF}"><submit button-type="button"/></field>
+    </form>
+</forms>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Language Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- API -->
+    <service name="searchLanguage" engine="java"  auth="true" export="true" action="GET"
+             location="org.apache.ofbiz.language.LanguageServices" invoke="searchLanguage">
+        <description>번역 언어 검색</description>
+        <attribute type="String" mode="IN" name="sourceLanguage" optional="true"/>
+        <attribute type="String" mode="IN" name="targetLanguage" optional="true"/>
+        <attribute name="list" type="List" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="searchSystemLanguage" engine="java"  auth="true" export="true" action="GET"
+             location="org.apache.ofbiz.language.LanguageServices" invoke="searchSystemLanguage">
+        <description>시스템 언어 검색</description>
+        <attribute type="String" mode="IN" name="systemLanguageCode" optional="true"/>
+        <attribute name="list" type="List" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="languageList" engine="java"  auth="true" export="true" action="GET"
+             location="org.apache.ofbiz.language.LanguageServices" invoke="languageList">
+        <description>전체 언어 리스트</description>
+        <attribute name="entityName" type="String" mode="IN" optional="false"/>
+        <attribute name="list" type="List" mode="OUT" optional="true"/>
+    </service>
+
+    <!-- Language & Related Services -->
+    <service name="createLanguage" default-entity-name="MatisLanguage" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a Language</description>
+        <permission-service service-name="languageGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+<!--        <override name="languageTypeId" optional="false"/>-->
+<!--        <override name="statusId" optional="false"/>-->
+<!--        <override name="languageName" optional="false"/>-->
+    </service>
+    <service name="updateLanguage" default-entity-name="MatisLanguage" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a Language</description>
+        <permission-service service-name="languageGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+<!--        <attribute name="oldStatusId" type="String" mode="OUT" optional="false"/>-->
+    </service>
+    <service name="deleteLanguage" default-entity-name="MatisLanguage" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a Language</description>
+        <permission-service service-name="languageGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+<!--    <service name="createLanguageStatus" default-entity-name="LanguageStatus" engine="simple"-->
+<!--            location="component://language/minilang/language/LanguageServices.xml" invoke="createLanguageStatus" auth="true">-->
+<!--        <description>Create a LanguageStatus</description>-->
+<!--        <permission-service service-name="languageGenericPermission" main-action="CREATE"/>-->
+<!--        <auto-attributes include="all" mode="IN" optional="false">-->
+<!--            <exclude field-name="statusDate"/>-->
+<!--            <exclude field-name="statusEndDate"/>-->
+<!--            <exclude field-name="changeByUserLoginId"/>-->
+<!--        </auto-attributes>-->
+<!--    </service>-->
+
+
+    <!-- system Language -->
+    <service name="createSystemLanguage" default-entity-name="SystemLanguage" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a SystemLanguage</description>
+        <permission-service service-name="languageGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSystemLanguage" default-entity-name="SystemLanguage" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a SystemLanguage</description>
+        <permission-service service-name="languageGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteSystemLanguage" default-entity-name="SystemLanguage" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a SystemLanguage</description>
+        <permission-service service-name="languageGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createLanguageItem" default-entity-name="LanguageItem" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a LanguageItem</description>
+        <permission-service service-name="languageGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="languageItemSeqId" mode="OUT"/> <!-- make this OUT rather than IN, we will automatically generate the next sub-sequence ID -->
+        <override name="description" optional="false"/>
+    </service>
+    <service name="updateLanguageItem" default-entity-name="LanguageItem" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a LanguageItem</description>
+        <permission-service service-name="languageGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteLanguageItem" default-entity-name="LanguageItem" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a LanguageItem</description>
+        <permission-service service-name="languageGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- LanguageFeature Services -->
+    <service name="createLanguageFeature" default-entity-name="LanguageFeature" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a LanguageFeature</description>
+        <permission-service service-name="languageGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="description" optional="false"/>
+    </service>
+    <service name="updateLanguageFeature" default-entity-name="LanguageFeature" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a LanguageFeature</description>
+        <permission-service service-name="languageGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteLanguageFeature" default-entity-name="LanguageFeature" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a LanguageFeature</description>
+        <permission-service service-name="languageGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createLanguageFeatureAppl" default-entity-name="LanguageFeatureAppl" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a LanguageFeatureAppl</description>
+        <permission-service service-name="languageGenericPermission" main-action="CREATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateLanguageFeatureAppl" default-entity-name="LanguageFeatureAppl" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a LanguageFeatureAppl</description>
+        <permission-service service-name="languageGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteLanguageFeatureAppl" default-entity-name="LanguageFeatureAppl" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a LanguageFeatureAppl</description>
+        <permission-service service-name="languageGenericPermission" main-action="DELETE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Permission Services -->
+    <service name="languageGenericPermission" engine="simple"
+             location="component://language/minilang/LanguagePermissionServices.xml" invoke="languageGenericPermission">
+        <implements service="permissionInterface"/>
+    </service>
+
+    <!-- Language ServiceTest Service -->
+    <service name="testCreateLanguageService" engine="simple"
+             location="component://language/minilang/language/LanguageServices.xml" invoke="testCreateLanguageService">
+        <implements service="testServiceInterface"/>
+    </service>
+    <!-- Send push notification service -->
+    <service name="sendLanguagePushNotifications" engine="java"
+                location="org.apache.ofbiz.language.LanguageServices" invoke="sendLanguagePushNotifications" auth="true">
+        <attribute name="languageId" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="message" mode="IN" type="String" optional="true"></attribute>
+        <attribute name="successMessage" mode="IN" type="String" optional="true"></attribute>
+    </service>
+
+    <!-- LanguageType services -->
+    <service name="createLanguageType" default-entity-name="LanguageType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a record of LanguageType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateLanguageType" default-entity-name="LanguageType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a record of LanguageType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteLanguageType" default-entity-name="LanguageType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a record of LanguageType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- LanguageFeatureApplType services -->
+    <service name="createLanguageFeatureApplType" default-entity-name="LanguageFeatureApplType" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a LanguageFeatureApplType</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateLanguageFeatureApplType" default-entity-name="LanguageFeatureApplType" engine="entity-auto" invoke="update" auth="true">
+        <description>Update a LanguageFeatureApplType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteLanguageFeatureApplType" default-entity-name="LanguageFeatureApplType" engine="entity-auto" invoke="delete" auth="true">
+        <description>Delete a LanguageFeatureApplType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+</services>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <!-- base/top/specific map first, then more common map added for shared labels -->
+                <property-map resource="LanguageUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.LanguageCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.LanguageCompanySubtitle" global="true"/>
+                <!-- layoutSettings.headerImageUrl can be used to specify an application specific logo; if not set,
+                    then the global layoutSettings.commonHeaderImageUrl (specified in GlobalDecorator) will be used. -->
+                <!--<set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.png" global="true"/>-->
+
+                <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
+                <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+                <!-- TODO: Use transform to specify component URI -->
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.LanguageCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.LanguageCompanySubtitle" global="true"/>
+                <set field="activeApp" value="matisLanguage" global="true"/>
+                <set field="applicationMenuName" value="LanguageAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://language/widget/language/LanguageMenus.xml" global="true"/>
+                <set field="applicationTitle" from-field="uiLabelMap.LanguageApplication" global="true"/>
+                <set field="helpAnchor" from-field="helpAnchor" default-value="_language"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-has-permission permission="LANGUAGE" action="_VIEW"/>
+                    </condition>
+                    <actions>
+                        <set field="layoutSettings.javaScripts[]" value="/language/js/LanguagePushNotifications.js" global="true"/>
+                    </actions>
+                </section>
+                <include-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonLanguageDecorator">
+        <!-- The CommonLanguageDecorator screen decorates a small group of screens that all have
+            something in common. It is decorated by the main-decorator screen. To see how the
+            various decorators are combined to build a screen, view the page source of any
+            Language component screen. HTML comments indicate the start and end points of each
+            screen and decorator. -->
+        <section>
+            <actions>
+                <set field="headerItem" value="LanguageMenuItem"/>
+                <set field="languageId" from-field="parameters.languageId"/>
+                <entity-one entity-name="MatisLanguage" value-field="matisLanguage"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="LANGUAGE" action="_VIEW"/>
+                                    <not><if-empty field="matisLanguage"/></not><!-- This is a check useful when only seed data are loaded -->
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-menu name="EditLanguage" location="component://language/widget/language/LanguageMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for LANGUAGE, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="LANGUAGE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="matisLanguage"/></not><!-- This is a check useful when only seed data are loaded -->
+                                    </condition>
+                                    <widgets>
+                                        <container style="h1"><label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${language.languageName} [${languageId}]</label></container>
+                                        <container style="button-bar">
+                                            <link target="EditLanguage" text="${uiLabelMap.LanguageNewLanguage}" style="buttontext create">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                            </link>
+                                            <link target="LanguageReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="buttontext">
+                                                <parameter param-name="languageId"/>
+                                                <image url-mode="raw" src="${iconsLocation}/printer.png"/>
+                                            </link>
+                                            <link target="LanguageReportXls" text="${uiLabelMap.CommonViewAsXls}" style="buttontext">
+                                                <parameter param-name="languageId"/>
+                                            </link>
+                                            <link target="LanguageReportPdf" text="${uiLabelMap.CommonPdf}" style="buttontext" target-window="_blank">
+                                                <parameter param-name="languageId"/>
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                                            <link target="LanguageReportPdfOptions" text="${uiLabelMap.LanguagePdfPassword}" style="buttontext">
+                                                <parameter param-name="languageId"/>
+                                                <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
+                                            </link>
+                                            <link target="LanguageReportPdfBarcode" text="${uiLabelMap.LanguagePdfBarcode}" style="buttontext" target-window="_blank">
+                                                <parameter param-name="languageId"/>
+                                                <image url-mode="raw" src="${iconsLocation}/ofbiz_barcode.png"/>
+                                            </link>
+                                            <link target="help" text="${uiLabelMap.CommonHelp}" style="buttontext" target-window="_blank">
+                                                <parameter param-name="topic" value="LanguageEditHelp"/>
+                                                <image url-mode="raw" src="${iconsLocation}/help.png"/>
+                                            </link>
+                                        </container>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container style="h1"><label>${uiLabelMap.LanguageNewLanguage}</label></container>
+                                    </fail-widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.LanguageViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonLanguageFeatureDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="LanguageFeature"/>
+                <set field="languageFeatureId" from-field="parameters.languageFeatureId"/>
+                <entity-one entity-name="LanguageFeature" value-field="languageFeature"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="LANGUAGE" action="_VIEW"/>
+                                    <not><if-empty field="languageFeature"/></not><!-- This is a check useful when only seed data are loaded -->
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-menu name="EditLanguageFeature" location="component://language/widget/language/LanguageMenus.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for LANGUAGE, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="LANGUAGE" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="languageFeature"/></not><!-- This is a check useful when only seed data are loaded -->
+                                    </condition>
+                                    <widgets>
+                                        <container style="h1">
+                                            <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${languageFeature.description} [${languageFeatureId}]</label>
+                                        </container>
+                                        <container style="button-bar">
+                                            <link target="EditLanguageFeature" text="${uiLabelMap.LanguageNewLanguageFeature}" style="buttontext">
+                                                <image url-mode="raw" src="${iconsLocation}/add.png"/>
+                                            </link>
+                                        </container>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container style="h1"><label>${uiLabelMap.LanguageNewLanguageFeature}</label></container>
+                                    </fail-widgets>
+                                </section>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.LanguageViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonLanguageGeoLocationDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="LanguageGeoLocation"/>
+                <set field="geoChart.dataSourceId" value="GEOPT_GOOGLE"/>
+                <set field="geoChart.width" value="600px"/>
+                <set field="geoChart.height" value="500px"/>
+                <set field="geoChart.points" from-field="geoPoints"/>
+                <set field="geoChart.center" from-field="geoCenter"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <include-menu name="LanguageGeoLocation" location="component://language/widget/language/LanguageMenus.xml"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <container style="clear" />
+                        <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonLanguageOsmGeoLocationDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="LanguageGeoLocation"/>
+                <set field="geoChart.dataSourceId" value="GEOPT_OSM"/>
+                <set field="geoChart.width" value="600px"/>
+                <set field="geoChart.height" value="500px"/>
+                <set field="geoChart.points" from-field="geoPoints"/>
+                <set field="geoChart.center" from-field="geoCenter"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <include-menu name="LanguageGeoLocation" location="component://language/widget/language/LanguageMenus.xml"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <container style="clear" />
+                        <include-screen name="geoChart" location="component://common/widget/CommonScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="CommonLanguageChartsDecorator">
+        <section>
+            <actions>
+                <set field="headerItem" value="LanguageCharts"/>
+                <entity-condition entity-name="LanguageCountByType" list="chartData">
+                    <order-by field-name="languageTypeId"/>
+                </entity-condition>
+                <set field="labelFieldName" value="languageTypeId"/>
+                <set field="dataFieldName" value="total"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="pre-body">
+                        <include-menu name="LanguageCharts" location="component://language/widget/language/LanguageMenus.xml"/>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <container style="clear" />
+                        <include-screen name="FlotChart" location="component://common/widget/flotScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="SimpleDecorator">
+        <section>
+            <actions>
+                <property-map resource="LanguageUiLabels" map-name="uiLabelMap" global="true"/>
+            </actions>
+            <widgets>
+                 <include-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="main">
+        <!-- This is the screen for the Main page in the Language component. A common pattern
+            in OFBiz is to have each component include a Main page as a starting point for
+            the user. -->
+        <section>
+            <actions>
+                <set field="tabButtonItem" value="main"/>
+            </actions>
+            <widgets>
+                 <include-screen name="FindLanguage" location="component://language/widget/language/LanguageScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+</screens>

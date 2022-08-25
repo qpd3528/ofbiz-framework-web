@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
+    <description>Accounting Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Payment services -->
+    <service name="createPayment" engine="groovy" default-entity-name="Payment"
+        location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPayment" auth="true"><!-- 결제 생성 -->
+        <description>Create a Payment.  If a paymentMethodId is supplied, paymentMethodTypeId is gotten from paymentMethod.  Otherwise, it must be supplied.  If no
+        paymentMethodTypeId and no paymentMethodId is supplied, then an error will be returned. </description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <override name="paymentTypeId" optional="false"/>
+        <override name="partyIdFrom" optional="false"/>
+        <override name="partyIdTo" optional="false"/>
+        <override name="amount" optional="false"/>
+    </service>
+
+    <service name="updatePayment" engine="groovy" default-entity-name="Payment"
+        location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="updatePayment" auth="true"><!-- 결제 업데이트 -->
+        <description>Update a Payment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="setPaymentStatus" engine="groovy" default-entity-name="Payment"
+        location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="setPaymentStatus" auth="true"><!-- 결제 상태 설정 -->
+        <description>Change the status of a Payment</description>
+        <permission-service service-name="acctgPaymentPermissionCheck" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="checkPaymentInvoices" engine="java"
+        location="org.apache.ofbiz.accounting.invoice.InvoiceServices" invoke="checkPaymentInvoices"><!-- 결제 송장 확인 -->
+        <description>Checks to see if each invoice to which a payment is applied has been fully paid up.  If so, sets the invoice status to PAID.</description>
+        <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="quickSendPayment" engine="groovy" default-entity-name="Payment"
+        location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="quickSendPayment"><!-- 빠른 결제 -->
+        <description>Updates a Payment and then marks it as PMNT_SENT</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createPaymentApplication" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPaymentApplication" auth="true"><!-- 결제 어플리케이션 생성 -->
+        <description>Create a payment application</description>
+        <attribute name="paymentId" type="String" mode="IN" optional="false"/>
+        <attribute name="toPaymentId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="taxAuthGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="amountApplied" type="BigDecimal" mode="INOUT" optional="true"/>
+        <attribute name="paymentApplicationId" type="String" mode="OUT" optional="false"/>
+        <attribute name="paymentTypeId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updatePaymentApplication" default-entity-name="PaymentApplication" engine="java"
+        location="org.apache.ofbiz.accounting.invoice.InvoiceServices" invoke="updatePaymentApplication"><!-- 결제 어플리케이션 업데이트 -->
+        <description>
+            Apply a payment to a Invoice or other payment or Billing account or  Taxauthority,
+            create/update paymentApplication records.
+        </description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/>
+        <override name="paymentId" optional="false"/>
+    </service>
+    <service name="updatePaymentApplicationDef" default-entity-name="PaymentApplication" engine="java"
+        location="org.apache.ofbiz.accounting.invoice.InvoiceServices" invoke="updatePaymentApplicationDef"><!-- 결제 애플리케이션 Def 업데이트 -->
+        <description>
+            Apply a payment to a Invoice or other payment or Billing account or Taxauthority,
+            If no ammountApplied is supplied the system will calculate and use the maximum possible value.
+        </description>
+        <auto-attributes mode="IN" include="pk" optional="true"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <attribute name="invoiceProcessing" type="String" mode="IN" optional="true"/>
+        <override name="paymentId" optional="false"/>
+    </service>
+    <service name="removePaymentApplication" default-entity-name="PaymentApplication" engine="simple"
+        location="component://accounting/minilang/invoice/InvoiceServices.xml" invoke="removePaymentApplication"><!-- 결제 어플리케이션 제거 -->
+        <description>Delete a paymentApplication record.</description>
+        <permission-service service-name="acctgInvoicePermissionCheck" main-action="UPDATE"/>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="OUT" include="nonpk" optional="true"/>
+    </service>
+
+    <service name="createPaymentAndApplication" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPaymentAndApplication" auth="true"><!-- 결제 및 어플리케이션 생성 -->
+        <description>Create a payment and a payment application for the full amount</description>
+        <auto-attributes entity-name="Payment" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Payment" include="pk" mode="INOUT" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="overrideGlAccountId" type="String" mode="IN" optional="true"/>
+        <attribute name="taxAuthGeoId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentApplicationId" type="String" mode="OUT" optional="false"/>
+        <override name="paymentTypeId" optional="false"/>
+        <override name="partyIdFrom" optional="false"/>
+        <override name="partyIdTo" optional="false"/>
+        <override name="statusId" optional="false"/>
+        <override name="amount" optional="false"/>
+    </service>
+
+    <service name="getInvoicePaymentInfoList" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="getInvoicePaymentInfoList" auth="true"><!-- 인보이스 결제 정보 목록 가져오기 -->
+        <description>Create a list with information on payment due dates and amounts for the invoice; one of invoiceId or invoice must be provided.</description>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoice" type="org.apache.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="invoicePaymentInfoList" type="List" mode="OUT" optional="false"/>
+    </service>
+    <service name="getInvoicePaymentInfoListByDueDateOffset" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="getInvoicePaymentInfoListByDueDateOffset" auth="true"><!-- 만기 날짜 상계로 송장 결제 정보 목록 가져오기 -->
+        <description>Create a list with information on payment due dates and amounts.</description>
+        <attribute name="invoiceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="daysOffset" type="Long" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="invoicePaymentInfoList" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="voidPayment" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="voidPayment" auth="true"><!-- 무효 결제 -->
+        <description>Sets payment status to PMNT_VOID, removes all PaymentApplications, changes related invoice statuses to 
+            INVOICE_READY if status is INVOICE_PAID, and reverses related AcctgTrans by calling copyAcctgTransAndEntries service</description>
+        <permission-service service-name="acctgPaymentPermissionCheck" main-action="UPDATE"/>
+        <attribute name="paymentId" mode="IN" optional="false" type="String"/>
+        <attribute name="finAccountTransId" type="String" mode="OUT" optional="true"/>
+        <attribute name="statusId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="getPaymentRunningTotal" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="getPaymentRunningTotal" auth="true"><!-- 결제 누계 가져오기 -->
+        <description>calculate running total for payments</description>
+        <attribute name="paymentIds" type="List" mode="IN" optional="false"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentRunningTotal" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="cancelPaymentBatch" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="cancelPaymentBatch" auth="true"><!-- 결제 일괄 취소 -->
+        <description>cancel payment batch</description>
+        <attribute name="paymentGroupId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createPaymentAndPaymentGroupForInvoices" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPaymentAndPaymentGroupForInvoices" auth="true"><!-- 송장에 대한 결제 및 결제 그룹 생성 -->
+        <description>Creates Payments, Payment Application and Payment Group for the same</description>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="checkStartNumber" type="Long" mode="IN" optional="true"/>
+        <attribute name="invoiceIds" type="List" mode="IN" optional="false"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentGroupId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="createPaymentAndApplicationForParty" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPaymentAndApplicationForParty" auth="true"><!-- 파티에 대한 결제 및 응용 프로그램 만들기 -->
+        <description>create Payment and PaymentApplications for multiple invoices for one party</description>
+        <attribute name="organizationPartyId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="invoices" type="List" mode="IN" optional="false"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
+        <attribute name="finAccountId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="checkStartNumber" type="Long" mode="IN" optional="true"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="invoiceIds" type="List" mode="OUT" optional="true"/>
+        <attribute name="amount" type="BigDecimal" mode="OUT" optional="true"/>
+    </service>
+    <service name="createPaymentGroupAndMember" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPaymentGroupAndMember" auth="true"><!-- 결제 그룹 및 회원 생성 -->
+        <attribute name="paymentIds" type="List" mode="IN" optional="false"/>
+        <attribute name="paymentGroupTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="paymentGroupName" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentGroupId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="cancelCheckRunPayments" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="cancelCheckRunPayments" auth="true"><!-- 수표 실행 결제 취소 -->
+        <description>Cancel all payments for payment group</description>
+        <attribute name="paymentGroupId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createFinAccoutnTransFromPayment" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createFinAccoutnTransFromPayment" auth="true"><!-- 결제에서 Fin 계정 거래 생성 -->
+        <auto-attributes entity-name="FinAccountTrans" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="FinAccountTrans" include="pk" mode="INOUT" optional="true"/>
+        <attribute name="invoiceIds" type="List" mode="IN" optional="true"/>
+    </service>
+    <service name="getPayments" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="getPayments" auth="true"><!-- 결제 받기 -->
+        <description>Get list of payment</description>
+        <attribute name="paymentGroupId" type="String" mode="IN" optional="true"/>
+        <attribute name="finAccountTransId" type="String" mode="IN" optional="true"/>
+        <attribute name="payments" type="List" mode="OUT" optional="true"/>
+    </service>
+    <service name="getPaymentGroupReconciliationId" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="getPaymentGroupReconciliationId" auth="true"><!-- 결제 그룹 조정 ID 가져오기 -->
+        <description>Get ReconciliationId associated to paymentGroup</description>
+        <attribute name="paymentGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="glReconciliationId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="checkAndCreateBatchForValidPayments" engine="groovy"
+            location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="checkAndCreateBatchForValidPayments" auth="true"><!-- 유효한 결제를 위한 배치를 확인하고 생성 -->
+        <description>Check the valid(unbatched) payment and create batch for same</description>
+        <implements service="createPaymentGroupAndMember"/>
+    </service>
+    
+    <service name="massChangePaymentStatus" engine="groovy"
+        location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="massChangePaymentStatus" auth="true"><!-- 일괄 결제 상태 변경 -->
+        <description>Set status of Payments in bulk.</description>
+        <attribute name="paymentIds" type="List" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
+        <attribute name="errorMessage" type="String" optional="true" mode="OUT"/>
+    </service>
+
+    <service name="createPaymentFromOrder" engine="groovy"
+        location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPaymentFromOrder" auth="true"><!-- 주문에서 결제 생성 -->
+        <description>Create Payment from Order when payment does exist yet and not disabled by accounting config</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentRefNum" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="createMatchingPaymentApplication" engine="groovy"
+        location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createMatchingPaymentApplication" auth="true"><!-- 매칭 결제 애플리케이션 생성 -->
+        <description>Create a payment application if either the invoice of payment could be found</description>
+        <attribute name="paymentId" type="String" mode="IN" optional="true"/>
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Payment content services -->
+    <service name="createPaymentContent" default-entity-name="PaymentContent" engine="groovy"
+             location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="createPaymentContent" auth="true"><!-- 결제 콘텐츠 생성 -->
+        <description>Add Content To Payment</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updatePaymentContent" default-entity-name="PaymentContent" engine="groovy"
+             location="component://accounting/groovyScripts/payment/PaymentServices.groovy" invoke="updatePaymentContent" auth="true"><!-- 결제 콘텐츠 업데이트 -->
+        <description>Update Content To Payment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removePaymentContent" default-entity-name="PaymentContent" engine="entity-auto" invoke="delete" auth="true"><!-- 결제 콘텐츠 제거 -->
+        <description>Remove Content From Payment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createBillingAccountTermAttr" engine="entity-auto" default-entity-name="BillingAccountTermAttr" invoke="create" auth="true"><!-- 결제 계정 기간 속성 생성 -->
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateBillingAccountTermAttr" engine="entity-auto" default-entity-name="BillingAccountTermAttr" invoke="update" auth="true"><!-- 결제 계정 기간 속성 업데이트 -->
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteBillingAccountTermAttr" engine="entity-auto" default-entity-name="BillingAccountTermAttr" invoke="delete" auth="true"><!-- 결제 계정 기간 속성 삭제 -->
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="createDeduction" engine="entity-auto" invoke="create" default-entity-name="Deduction" auth="true"><!-- 공제 생성 -->
+        <description>Create a Deduction record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDeduction" engine="entity-auto" invoke="update" default-entity-name="Deduction" auth="true"><!-- 공제 업데이트 -->
+        <description>Update a Deduction record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteDeduction" engine="entity-auto" invoke="delete" default-entity-name="Deduction" auth="true"><!-- 공제 삭제 -->
+        <description>Delete a Deduction record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+    <service name="createDeductionType" engine="entity-auto" invoke="create" default-entity-name="DeductionType" auth="true"><!-- 공제 유형 생성 -->
+        <description>Create a Deduction Type record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateDeductionType" engine="entity-auto" invoke="update" default-entity-name="DeductionType" auth="true"><!-- 공제 유형 업데이트 -->
+        <description>Update a Deduction Type record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteDeductionType" engine="entity-auto" invoke="delete" default-entity-name="DeductionType" auth="true"><!-- 공제 유형 삭제 -->
+        <description>Delete a Deduction Type record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentAttribute" engine="entity-auto" invoke="create" default-entity-name="PaymentAttribute" auth="true"><!-- 결제 속성 생성 -->
+        <description>Create a PaymentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentAttribute" engine="entity-auto" invoke="update" default-entity-name="PaymentAttribute" auth="true"><!-- 결제 속성 업데이트 -->
+        <description>Update a PaymentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentAttribute" engine="entity-auto" invoke="delete" default-entity-name="PaymentAttribute" auth="true"><!-- 결제 속성 삭제 -->
+        <description>Delete a PaymentAttribute record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentBudgetAllocation" engine="entity-auto" invoke="create" default-entity-name="PaymentBudgetAllocation" auth="true"><!-- 결제 예산 할당 생성 -->
+        <description>Create a PaymentBudgetAllocation record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentBudgetAllocation" engine="entity-auto" invoke="update" default-entity-name="PaymentBudgetAllocation" auth="true"><!-- 결제 예산 할당 업데이트 -->
+        <description>Update a PaymentBudgetAllocation record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentBudgetAllocation" engine="entity-auto" invoke="delete" default-entity-name="PaymentBudgetAllocation" auth="true"><!-- 결제 예산 할당 삭제 -->
+        <description>Delete a PaymentBudgetAllocation record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentContentType" engine="entity-auto" invoke="create" default-entity-name="PaymentContentType" auth="true"><!-- 결제 콘텐츠 유형 생성 -->
+        <description>Create a PaymentContentType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentContentType" engine="entity-auto" invoke="update" default-entity-name="PaymentContentType" auth="true"><!-- 결제 콘텐츠 유형 업데이트 -->
+        <description>Update a PaymentContentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentContentType" engine="entity-auto" invoke="delete" default-entity-name="PaymentContentType" auth="true"><!-- 결제 콘텐츠 유형 삭제 -->
+        <description>Delete a PaymentContentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentGroupType" engine="entity-auto" invoke="create" default-entity-name="PaymentGroupType" auth="true"><!-- 결제 그룹 유형 생성 -->
+        <description>Create a PaymentGroupType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentGroupType" engine="entity-auto" invoke="update" default-entity-name="PaymentGroupType" auth="true"><!-- 결제 그룹 유형 업데이트 -->
+        <description>Update a PaymentGroupType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentGroupType" engine="entity-auto" invoke="delete" default-entity-name="PaymentGroupType" auth="true"><!-- 결제 그룹 유형 삭제 -->
+        <description>Delete a PaymentGroupType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentType" engine="entity-auto" invoke="create" default-entity-name="PaymentType" auth="true"><!-- 결제 유형 생성 -->
+        <description>Create a PaymentType record</description>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentType" engine="entity-auto" invoke="update" default-entity-name="PaymentType" auth="true"><!-- 결제 유형 업데이트 -->
+        <description>Update a PaymentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentType" engine="entity-auto" invoke="delete" default-entity-name="PaymentType" auth="true"><!-- 결제 유형 삭제 -->
+        <description>Delete a PaymentType record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+    <service name="createPaymentTypeAttr" engine="entity-auto" invoke="create" default-entity-name="PaymentTypeAttr" auth="true"><!-- 결제 유형 속성 생성 -->
+        <description>Create a PaymentTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePaymentTypeAttr" engine="entity-auto" invoke="update" default-entity-name="PaymentTypeAttr" auth="true"><!-- 결제 유형 속성 업데이트 -->
+        <description>Update a PaymentTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePaymentTypeAttr" engine="entity-auto" invoke="delete" default-entity-name="PaymentTypeAttr" auth="true"><!-- 결제 유형 속성 삭제 -->
+        <description>Delete a PaymentTypeAttr record</description>
+        <auto-attributes include="pk" mode="IN"/>
+    </service>
+
+</services>
